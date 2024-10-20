@@ -18,8 +18,10 @@
             const isCreate = computed(() => store.isCreate);
             
             const changeSearchInput = (event) => {
-                if (event.target.value.trim() !== '' && event.target.value.length > 1) {
-                    store.changeSearchInput(event);
+                let phone = event.target.value.replace(/\D/g, '');
+                event.target.value = phone;
+                if (phone.trim() !== '' && phone.length > 6) {
+                    store.changeSearchInput(phone);
                 } else {
                     store.isCreate = false;
                 }

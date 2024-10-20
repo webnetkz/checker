@@ -10,11 +10,11 @@ header('Access-Control-Allow-Headers: Content-Type'); // Укажите заго
 header('Content-Type: application/json');
 
 use App\Phone;
-use App\Comments;
+use App\Messages;
 
 require_once './settings.php';
 require_once './app/Phone.php';
-require_once './app/Comments.php';
+require_once './app/Messages.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
   header('Access-Control-Allow-Origin: http://localhost:8080');
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $phone = $secure->toPhone($data['phone']);
     
     $phoneClass = new Phone($phone);
-    $commentsClass = new Comments($phone);
+    $messagesClass = new Messages($phone);
 
     if ($data !== null && isset($data['action'], $data['phone']) && !empty($phone)) {
 
@@ -41,21 +41,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       switch($data['action']) {
             case 'search_phone':
                 if ($checkPhone) {
-                    $data = ['data_of_phone' => $checkPhone, 'comments' => $commentsClass->getAllComments()];
+                    $data = ['data_of_phone' => $checkPhone, 'messages' => $messagesClass->getAllMessages()];
                     $data = ['success' => true, 'data' => $data];
                 } else {
                   $phoneClass->createNewPhone();
-                  $phoneClass->createTableOfComments();
                   $data = ['success' => true, 'msg' => 'Created new phone'];
                 }
-            
             break;
 
-            case 'create_comment':        
-                #$comment = $secure->filterData($data['comment']);
-                #$comments->createNewComment($comment, $data['rate']);
+            case 'create_message':        
+                $message = $secure->filterData($data['message']);
+                $result = $messagesClass->createNewMessage($message, $data['rate']);
         
-                $data = ['msg' => 'Created comment'];
+                $data = ['msg' => 'Created message', 'result' => $result];
             break;
         }
         

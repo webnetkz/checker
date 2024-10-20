@@ -16,8 +16,8 @@ export const useStore = defineStore({
   }),
 
   actions: {
-    changeSearchInput(event) {
-        this.searchInput = event.target.value.trim();
+    changeSearchInput(phone) {
+        this.searchInput = phone;
         
         if (this.searchInput !== '') {
           fetch(this.url, {
@@ -29,17 +29,16 @@ export const useStore = defineStore({
           }).then(response => {
             return response.json();
           }).then(data => {
-            if (data?.data?.table) {
+            if (data?.data?.data) {
               this.isCreate = true;
               this.comments = [];
             } else {
               this.isCreate = false;
             }
-            console.log(data.data.data);
-            this.comments = data.data.data.comments;
-            this.commentsCount = data.data.data.table.data_of_phone[0].comments;
-            this.likes = data.data.data.table.data_of_phone[0].likes;
-            this.dislikes = data.data.data.table.data_of_phone[0].dislikes;
+            this.comments = data.data.data.messages;
+            this.commentsCount = data.data.data.data_of_phone.messages_count;
+            this.likes = data.data.data.data_of_phone.likes;
+            this.dislikes = data.data.data.data_of_phone.dislikes;
           }).catch(error => {
             console.log('Произошла ошибка:', error);
           });
@@ -61,16 +60,18 @@ export const useStore = defineStore({
       }
 
       this.newComment = event.target.parentNode.previousSibling.value;
-      event.target.parentNode.previousSibling.value = '';
+      setTimeout(() => {
+        event.target.parentNode.previousSibling.value = '';
+      }, 0);
 
       fetch(this.url, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({"action": "create_comment", "phone": this.searchInput, "comment": this.newComment, "rate": rate})
+            body: JSON.stringify({"action": "create_message", "phone": this.searchInput, "message": this.newComment, "rate": rate})
           }).then(response => {
-            this.comments.unshift({'comment': this.newComment, rate: rate, 'create_date': this.formattedDateTime()})
+            this.comments.unshift({'message': this.newComment, rate: rate, 'create_date': this.formattedDateTime()})
             return response.json();
           }).catch(error => {
             console.log('Произошла ошибка:', error);

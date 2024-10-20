@@ -20,7 +20,6 @@
       const likes = computed(() => store.likes);
       const dislikes = computed(() => store.dislikes);
 
-
       return {
         searchValue,
         commentsCount,

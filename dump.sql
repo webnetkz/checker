@@ -1,3 +1,4 @@
+mysqldump: [Warning] Using a password on the command line interface can be insecure.
 -- MySQL dump 10.13  Distrib 9.1.0, for Linux (aarch64)
 --
 -- Host: localhost    Database: checker
@@ -24,13 +25,13 @@ DROP TABLE IF EXISTS `messages`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `messages` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `phone_number_id` bigint unsigned NOT NULL,
+  `phone_number` varchar(20) NOT NULL,
   `message` text,
+  `ip` varchar(45) NOT NULL,
   `rate` tinyint(1) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `phone_number_id` (`phone_number_id`),
-  CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`phone_number_id`) REFERENCES `phone_numbers` (`id`) ON DELETE CASCADE
+  KEY `phone_number_id` (`phone_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -48,7 +49,7 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `phone_numbers`;
-/*!40101 SET @saved_cs_client     = @@CHARACTER_SET_CLIENT */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `phone_numbers` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
@@ -62,7 +63,7 @@ CREATE TABLE `phone_numbers` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `phone_number` (`phone_number`),
   UNIQUE KEY `phone_number_2` (`phone_number`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,7 +72,6 @@ CREATE TABLE `phone_numbers` (
 
 LOCK TABLES `phone_numbers` WRITE;
 /*!40000 ALTER TABLE `phone_numbers` DISABLE KEYS */;
-INSERT INTO `phone_numbers` VALUES (1,123,'::1',0,0,0,0,'2024-10-16 22:46:03'),(2,12,'::1',0,0,0,0,'2024-10-16 23:18:19'),(3,1233,'::1',0,0,0,0,'2024-10-16 23:21:39'),(4,1,'::1',0,0,0,0,'2024-10-16 23:23:32'),(5,1231,'::1',0,0,0,0,'2024-10-16 23:23:33'),(6,12312,'::1',0,0,0,0,'2024-10-16 23:23:33'),(7,123124,'::1',0,0,0,0,'2024-10-16 23:23:33'),(8,1231242,'::1',0,0,0,0,'2024-10-16 23:23:37'),(9,12312422,'::1',0,0,0,0,'2024-10-16 23:23:38'),(10,12313,'::1',0,0,0,0,'2024-10-16 23:26:45'),(11,123133,'::1',0,0,0,0,'2024-10-16 23:26:45'),(12,32,'::1',0,0,0,0,'2024-10-17 14:51:39'),(13,321,'::1',0,0,0,0,'2024-10-17 14:51:39'),(14,123123,'::1',0,0,0,0,'2024-10-17 14:54:04');
 /*!40000 ALTER TABLE `phone_numbers` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -84,4 +84,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-18  2:30:26
+-- Dump completed on 2024-10-20  4:51:57
